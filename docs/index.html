@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Narriva — Transcrição e organização de áudios</title>
+    <meta
+      name="description"
+      content="A Narriva auxilia na transcrição de entrevistas para pesquisa e trabalho acadêmico."
+    />
+    <link rel="icon" href="logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: oklch(0.95 0.04 350);
+        --foreground: oklch(0.28 0.06 355);
+        --card: oklch(0.98 0.02 350);
+        --primary: oklch(0.52 0.18 355);
+        --primary-foreground: oklch(0.98 0.015 350);
+        --muted-foreground: oklch(0.42 0.06 355);
+        --border: oklch(0.82 0.06 350);
+        --radius: 0.75rem;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      }
+      a { color: inherit; }
+      .page { display: flex; min-height: 100dvh; flex-direction: column; }
+      header, .cta, main { width: min(100% - 2.5rem, 64rem); }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 0 auto;
+        padding: 1.25rem 0;
+      }
+      .brand { display: flex; min-width: 0; align-items: center; gap: 0.75rem; }
+      .brand img { width: 3rem; height: 3rem; border-radius: 0.5rem; }
+      .brand p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1.25rem; font-weight: 600; }
+      .actions { display: flex; flex-shrink: 0; gap: 0.5rem; }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.75rem;
+        padding: 0 1rem;
+        border-radius: var(--radius);
+        border: 1px solid transparent;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .button.primary { background: var(--primary); color: var(--primary-foreground); }
+      .button.outline { border-color: var(--border); background: var(--background); }
+      main { margin: 0 auto; flex: 1; padding: 3rem 0 4rem; }
+      .kicker { margin: 0; color: var(--primary); font-size: 0.875rem; font-weight: 700; }
+      h1 { max-width: 46rem; margin: 1rem 0 0; font-size: clamp(2.25rem, 5vw, 3rem); line-height: 1.15; letter-spacing: -0.02em; }
+      .lead, .prose p, .card p, .cta p { color: var(--muted-foreground); line-height: 1.75; }
+      .lead { max-width: 46rem; margin: 1.5rem 0 0; font-size: 1.125rem; }
+      .hero-actions, .cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+      h2 { margin: 0; font-size: 1.5rem; letter-spacing: -0.02em; }
+      .prose { max-width: 46rem; margin-top: 4rem; }
+      .prose p { margin: 1rem 0 0; }
+      .grid, .steps { display: grid; gap: 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+      .card, .cta {
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        background: var(--card);
+        padding: 1.25rem;
+      }
+      .card h3 { margin: 0; font-size: 1.125rem; }
+      .card p { margin: 0.5rem 0 0; }
+      .uses { margin-top: 3.5rem; }
+      .steps-section { margin-top: 3.5rem; }
+      .cta { width: auto; margin-top: 4rem; padding: 2rem 1.5rem; }
+      .cta p { max-width: 40rem; margin: 0.75rem 0 0; }
+      @media (min-width: 768px) {
+        header, main { width: min(100% - 5rem, 64rem); }
+        .grid { grid-template-columns: repeat(3, 1fr); }
+        .steps { grid-template-columns: repeat(2, 1fr); }
+        .cta { padding: 2rem 2.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="brand">
+          <img src="logo.png" alt="" width="48" height="48" />
+          <p>Narriva</p>
+        </div>
+        <div class="actions">
+          <a class="button outline" href="#comece">Entrar</a>
+          <a class="button primary" href="#comece">Inscrever-se</a>
+        </div>
+      </header>
+      <main>
+        <p class="kicker">Uso acadêmico e entrevistas</p>
+        <h1>Uma ferramenta para transcrever entrevistas e organizar o que foi dito.</h1>
+        <p class="lead">
+          A Narriva auxilia na transcrição de entrevistas para pesquisa e trabalho acadêmico. O áudio autorizado
+          vira texto em português, com participantes separados, revisão na mesma página e material para analisar
+          e escrever depois.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#comece">Inscrever-se</a>
+          <a class="button outline" href="#comece">Entrar</a>
+        </div>
+
+        <section class="prose">
+          <h2>O que o site faz</h2>
+          <p>
+            Quem pesquisa com entrevistas costuma gastar horas ouvindo de novo a gravação para anotar falas,
+            identificar quem disse o quê e localizar trechos no texto final. A Narriva entra nesse meio do
+            caminho: importa o áudio, produz a transcrição e deixa o texto pronto para correção.
+          </p>
+          <p>
+            O resultado não substitui a leitura do pesquisador. A transcrição é um rascunho fiel o bastante
+            para revisar, e a versão que você salva é a que segue para a nuvem de palavras, as análises e os
+            relatórios. Cada conta guarda os próprios projetos e arquivos.
+          </p>
+        </section>
+
+        <section class="uses">
+          <h2>Para o trabalho com falas</h2>
+          <ul class="grid">
+            <li class="card">
+              <h3>Entrevistas</h3>
+              <p>Passe da gravação para um texto que dá para ler, marcar e citar no relatório, no artigo ou na dissertação.</p>
+            </li>
+            <li class="card">
+              <h3>Mais de uma voz</h3>
+              <p>Em conversas e grupos, cada voz reconhecida fica separada. O nome civil não é atribuído sozinho: você confirma quem é quem.</p>
+            </li>
+            <li class="card">
+              <h3>Organização da pesquisa</h3>
+              <p>Projetos, áudios e transcrições ficam na mesma conta, com painel, análises e relatórios a partir do texto revisado.</p>
+            </li>
+          </ul>
+        </section>
+
+        <section class="steps-section">
+          <h2>Como a entrevista vira texto</h2>
+          <ol class="steps">
+            <li class="card">
+              <h3>1. Reúna o material</h3>
+              <p>Crie um projeto e envie o áudio da entrevista. Formatos aceitos: MP3, WAV, M4A, MP4, OGG e WebM, até 500 MB. Gravações longas podem ser divididas em partes.</p>
+            </li>
+            <li class="card">
+              <h3>2. Leia e revise</h3>
+              <p>A fala vira um texto contínuo em português. Você corrige trechos, pausa ou recarrega a leitura e acompanha o andamento de cada arquivo.</p>
+            </li>
+            <li class="card">
+              <h3>3. Nomeie quem fala</h3>
+              <p>As vozes distinguíveis aparecem como Participante 1, Participante 2 e os seguintes. Troque o rótulo pelo nome usado na pesquisa.</p>
+            </li>
+            <li class="card">
+              <h3>4. Analise e exporte</h3>
+              <p>Veja tempo de fala, turnos, termos e a nuvem de palavras. Baixe o texto em TXT, DOCX, PDF, legendas ou planilha para o trabalho escrito.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="cta" id="comece">
+          <h2>Comece pela sua conta</h2>
+          <p>Entre se já tem acesso, ou inscreva-se para criar projetos e enviar a primeira entrevista. A conta é criada na plataforma Narriva.</p>
+          <div class="cta-actions">
+            <a class="button primary" href="#comece">Inscrever-se</a>
+            <a class="button outline" href="#comece">Entrar</a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
