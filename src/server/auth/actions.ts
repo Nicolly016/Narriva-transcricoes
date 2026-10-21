@@ -1,9 +1,9 @@
 "use server"
 
-import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { readPublicSupabaseConfig } from "@/domain/env"
+import { createServiceRoleClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
 const credentialsSchema = z.object({
@@ -19,20 +19,35 @@ function authErrorMessage(message: string): string {
   if (normalized.includes("email not confirmed")) {
     return "Confirme o e-mail antes de entrar."
   }
-  if (normalized.includes("already registered") || normalized.includes("already been registered")) {
+  if (isAlreadyRegistered(message)) {
     return "Já existe uma conta com este e-mail."
   }
   return "Não foi possível autenticar. Tente novamente."
 }
 
-async function originFromHeaders(): Promise<string> {
-  const headerList = await headers()
-  const host = headerList.get("x-forwarded-host") ?? headerList.get("host")
-  const proto = headerList.get("x-forwarded-proto") ?? "http"
-  if (!host) {
-    return "http://localhost:3000"
+function isAlreadyRegistered(message: string): boolean {
+  const normalized = message.toLowerCase()
+  return normalized.includes("already registered") || normalized.includes("already been registered")
+}
+
+async function confirmEmail(email: string) {
+  const admin = createServiceRoleClient()
+  for (let page = 1; page <= 5; page += 1) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 })
+    if (error || data.users.length === 0) {
+      return
+    }
+    const user = data.users.find((item) => item.email?.toLowerCase() === email.toLowerCase())
+    if (user) {
+      if (!user.email_confirmed_at) {
+        await admin.auth.admin.updateUserById(user.id, { email_confirm: true })
+      }
+      return
+    }
+    if (data.users.length < 200) {
+      return
+    }
   }
-  return `${proto}://${host}`
 }
 
 export async function signIn(formData: FormData) {
@@ -49,7 +64,12 @@ export async function signIn(formData: FormData) {
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword(parsed.data)
+  let { error } = await supabase.auth.signInWithPassword(parsed.data)
+  if (error?.message.toLowerCase().includes("email not confirmed")) {
+    await confirmEmail(parsed.data.email)
+    const retry = await supabase.auth.signInWithPassword(parsed.data)
+    error = retry.error
+  }
   if (error) {
     redirect(`/login?error=${encodeURIComponent(authErrorMessage(error.message))}`)
   }
@@ -71,28 +91,33 @@ export async function signUp(formData: FormData) {
     redirect("/signup?error=credenciais")
   }
 
-  const supabase = await createClient()
-  const origin = await originFromHeaders()
-  const { data, error } = await supabase.auth.signUp({
+  const admin = createServiceRoleClient()
+  const { error: createError } = await admin.auth.admin.createUser({
     email: parsed.data.email,
     password: parsed.data.password,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`,
-      data: {
-        display_name: displayName.data,
-      },
+    email_confirm: true,
+    user_metadata: {
+      display_name: displayName.data,
     },
   })
 
+  if (createError && !isAlreadyRegistered(createError.message)) {
+    redirect(`/signup?error=${encodeURIComponent(authErrorMessage(createError.message))}`)
+  }
+  if (createError) {
+    await confirmEmail(parsed.data.email)
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.signInWithPassword(parsed.data)
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(authErrorMessage(error.message))}`)
+    const message = isAlreadyRegistered(createError?.message ?? "")
+      ? "Já existe uma conta com este e-mail."
+      : authErrorMessage(error.message)
+    redirect(`/signup?error=${encodeURIComponent(message)}`)
   }
 
-  if (data.session) {
-    redirect("/")
-  }
-
-  redirect("/login?notice=confirmacao")
+  redirect("/")
 }
 
 export async function signOut() {
